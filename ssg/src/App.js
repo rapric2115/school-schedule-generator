@@ -1,12 +1,15 @@
-import logo from './logo.svg';
 import './App.css';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import theme from './vitals/theme';
 import Name from './components/name';
 
 function App() {
   return (
-    <div>
-      <Name name={'Adrian'}/>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Name name="Grades and Teachers" />
+    </ThemeProvider>
   );
 }
 

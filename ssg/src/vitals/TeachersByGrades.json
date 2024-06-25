@@ -1,0 +1,69 @@
+{
+    "12grade": {
+        "teacher": "Mr. Richardson",
+        "grade": "12 Grade",
+        "lunchBreaks": {
+            "Monday": "12:00- 12:30",
+            "Tuesday": "12:00 - 12:30",
+            "Wednesday": "12:00 - 12:30",
+            "Thursday": "12:00 - 12:30",
+            "Friday": "12:00 - 12:30"
+        },
+        "MandatoryClasses": {
+            "Math": 5,
+            "English": 5,
+            "Science": 4,
+            "History": 4
+        },
+        "ElectiveSubjects": {
+            "Art": 1,
+            "Music": 1,
+            "Physical Education": 2
+        },
+        "breakBetweenClasses": 5
+    },
+    "11grade": {
+        "teacher": "Mr. Robinson",
+        "grade": "11 Grade"
+    },
+    "10grade": {
+        "teacher": "Ms. Gonzalez",
+        "grade": "10 Grade"
+    },
+    "9grade": {
+        "teacher": "Ms. Abreu",
+        "grade": "9 Grade"
+    },
+    "8grade": {
+        "teacher": "Mr. Musk",
+        "grade": "8 Grade"
+    },
+    "7grade": {
+        "teacher": "Mr. Benzon",
+        "grade": "7 Grade"
+    },
+    "6grade": {
+        "teacher": "Mr. Gates",
+        "grade": "6 Grade"
+    },
+    "5grade": {
+        "teacher": "Ms. Martinez",
+        "grade": "5 Grade"
+    },
+    "4grade": {
+        "teacher": "Ms. Aybar",
+        "grade": "4 Grade"
+    },
+    "3grade": {
+        "teacher": "Ms. Ballester",
+        "grade": "3 Grade"
+    },
+    "Kinder": {
+        "teacher": "Ms. Paeiowasky",
+        "grade": "Kinder"
+    },
+    "Pre-Kinder": {
+        "teacher": "Ms. Einstein",
+        "grade": "Pre-Kinder"
+    }
+}

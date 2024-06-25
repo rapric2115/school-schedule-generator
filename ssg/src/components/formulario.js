@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+
 
 // Initial values for the form
 const initialValues = {
@@ -127,9 +128,17 @@ const FormikForm = () => {
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={(values) => {
+      onSubmit={async (values) => {
         console.log('Form data', values);
-        alert(JSON.stringify(values, null, 2));
+        // alert(JSON.stringify(values, null, 2));
+        // // const generateSchedule = firebase.functions().httpsCallable('generateSchedule');
+        // // const response = await generateSchedule(data);
+        // if (response.data.success) {
+        // //   const scheduleDoc = await firestore.collection('schedules').doc(response.data.id).get();
+        // //   setSchedule(scheduleDoc.data());
+        // } else {
+        // //   console.error('Error generating schedule:', response.data.error);
+        // }
       }}
     >
       {({ values }) => (
