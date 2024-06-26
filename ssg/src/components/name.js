@@ -5,12 +5,15 @@ import { Typography, Modal, Box, TextField } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import teachers from './../vitals/teachers'; // Check this path
 import gradesData from './../vitals/grades'; // Check this path
+import AddTeachers from './addTeacherBtn';
+import generateSchedule from '../vitals/scheduleFunction';
 
 const Name = ({ name }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [grades, setGrades] = useState([]);
   const [formData, setFormData] = useState({ title: '', description: '' });
+  const [schedules, setSchedules] = useState({});
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -25,12 +28,18 @@ const Name = ({ name }) => {
     handleOpen();
   };
 
+  const handleGenerateSchedule = () => {
+    const generatedSchedules = generateSchedule(grades, gradesData);
+    setSchedules(generatedSchedules);
+  };
+
   useEffect(() => {
-    console.log('gradesData:', gradesData); // Log entire gradesData object
+    // console.log('gradesData:', gradesData); // Log entire gradesData object
     if (gradesData) {
       const gradeKeys = Object.keys(gradesData);
       const gradeTeachers = gradeKeys.map(gradeKey => ({
         grade: gradeKey,
+        gradeName: gradesData[gradeKey].constraints.gradeName,
         teachers: gradesData[gradeKey].teachers.map(teacherId => ({
           id: teacherId,
           ...teachers[teacherId]
@@ -40,30 +49,60 @@ const Name = ({ name }) => {
     } else {
       console.warn('gradesData is undefined or null');
     }
+    console.log('grades info', grades)
   }, []);
 
   return (
     <div>
       <h1>{name}</h1>
+      <div>
+        <AddTeachers />
+        <Button 
+          variant="contained"
+          color="primary"
+          sx={{margin: "10px"}}
+          onClick={handleGenerateSchedule}
+        >
+          Generate Schedule
+        </Button>
+      </div>
       <div className="flexWrap">
         {grades.map((gradeInfo, index) => (
           <div className="btn-margin-1" key={index}>
-           
-              <Button
-                key={index}
-                variant="contained"
-                endIcon={<SchoolIcon />}
-                color="primary"
-                onClick={handleOpen}
-              >
-                <Typography variant="body1">
-                  {gradeInfo.teachers[0].name}
-                  <Typography variant="body2" sx={{ fontSize: 10, textAlign: 'left' }}>
-                    {gradeInfo.grade}
-                  </Typography>
+            <Button
+              key={index}
+              variant="contained"
+              endIcon={<SchoolIcon />}
+              color="primary"
+              onClick={handleOpen}
+            >
+              <Typography variant="body1">
+                {gradeInfo.teachers[0]?.name || 'No Teacher'}
+                <Typography variant="body2" sx={{ fontSize: 10, textAlign: 'left' }}>
+                  {gradeInfo.gradeName}
                 </Typography>
-              </Button>
-          
+              </Typography>
+            </Button>
+          </div>
+        ))}
+      </div>
+
+      <div>
+        {Object.keys(schedules).map((gradeKey, index) => (
+          <div key={index}>
+            <h2>{gradesData[gradeKey].constraints.gradeName} Schedule</h2>
+            {schedules[gradeKey].map((daySchedule, dayIndex) => (
+              <div key={dayIndex}>
+                <h3>{daySchedule.day}</h3>
+                {daySchedule.classes.map((classInfo, classIndex) => (
+                  <div className="scheduleTime">
+                    <div key={classIndex}>
+                      <strong>{classInfo.time}:</strong> {classInfo.subject} with {classInfo.teacher}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
         ))}
       </div>
@@ -88,7 +127,7 @@ const Name = ({ name }) => {
           sx={{ border: '2px solid grey', backgroundColor: '#fff' }}
         >
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
+            Edit Grade
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField

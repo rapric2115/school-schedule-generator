@@ -49,3 +49,8 @@
 .modal-center {
   margin-inline: auto;
 }
+
+.scheduleTime {
+  display: flex;
+  flex-direction: row;
+}
