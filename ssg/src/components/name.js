@@ -3,10 +3,10 @@ import SchoolIcon from '@mui/icons-material/School';
 import Button from '@mui/material/Button';
 import { Typography, Modal, Box, TextField } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import teachers from './../vitals/teachers'; // Check this path
-import gradesData from './../vitals/grades'; // Check this path
+import teachers from '../vitals/teachers'; // Check this path
+import gradesData from '../vitals/grades'; // Check this path
 import AddTeachers from './addTeacherBtn';
-import generateSchedule from '../vitals/scheduleFunction';
+import generateSchedule from '../vitals/schdle';
 
 const Name = ({ name }) => {
   const theme = useTheme();
@@ -29,12 +29,17 @@ const Name = ({ name }) => {
   };
 
   const handleGenerateSchedule = () => {
-    const generatedSchedules = generateSchedule(grades, gradesData);
-    setSchedules(generatedSchedules);
+    try {
+      const generatedSchedules = generateSchedule();
+      console.log('Generated Schedules:', generatedSchedules); // Log generated schedules here
+      setSchedules(generatedSchedules);
+    } catch (error) {
+      console.error('Error generating schedule:', error);
+      // Handle error gracefully, e.g., show a notification to the user
+    }
   };
 
   useEffect(() => {
-    // console.log('gradesData:', gradesData); // Log entire gradesData object
     if (gradesData) {
       const gradeKeys = Object.keys(gradesData);
       const gradeTeachers = gradeKeys.map(gradeKey => ({
@@ -49,8 +54,10 @@ const Name = ({ name }) => {
     } else {
       console.warn('gradesData is undefined or null');
     }
-    console.log('grades info', grades)
-  }, []);
+  }, [gradesData]);
+
+  // Log gradesData for verification
+  console.log('Grades Data:', gradesData);
 
   return (
     <div>
@@ -60,7 +67,7 @@ const Name = ({ name }) => {
         <Button 
           variant="contained"
           color="primary"
-          sx={{margin: "10px"}}
+          sx={{ margin: "10px" }}
           onClick={handleGenerateSchedule}
         >
           Generate Schedule
@@ -88,23 +95,38 @@ const Name = ({ name }) => {
       </div>
 
       <div>
-        {Object.keys(schedules).map((gradeKey, index) => (
+      {Object.keys(schedules).length > 0 ? (
+        Object.keys(schedules).map((gradeKey, index) => (
           <div key={index}>
-            <h2>{gradesData[gradeKey].constraints.gradeName} Schedule</h2>
-            {schedules[gradeKey].map((daySchedule, dayIndex) => (
-              <div key={dayIndex}>
-                <h3>{daySchedule.day}</h3>
-                {daySchedule.classes.map((classInfo, classIndex) => (
-                  <div className="scheduleTime">
-                    <div key={classIndex}>
-                      <strong>{classInfo.time}:</strong> {classInfo.subject} with {classInfo.teacher}
-                    </div>
+            <h2>{gradesData[gradeKey]?.constraints.gradeName} Schedule</h2>
+            {Object.keys(schedules[gradeKey] || {}).map((section) => (
+              <div key={section}>
+                <h3>Section {section}</h3>
+                {Object.keys(schedules[gradeKey][section] || {}).map((subject) => (
+                  <div key={subject}>
+                    <h4>{subject}</h4>
+                    <ul>
+                      {Array.isArray(schedules[gradeKey][section][subject]) ? (
+                        schedules[gradeKey][section][subject].map((classInfo, classIndex) => (
+                          <li key={classIndex}>
+                            <div className="scheduleTime">
+                              <strong>{classInfo.time}:</strong> {classInfo.day}, Classroom: {classInfo.classroom}, Teacher: {classInfo.teacher}
+                            </div>
+                          </li>
+                        ))
+                      ) : (
+                        <li>No schedule available for this subject</li>
+                      )}
+                    </ul>
                   </div>
                 ))}
               </div>
             ))}
           </div>
-        ))}
+        ))
+      ) : (
+        <p>No class schedule for a grade</p>
+      )}
       </div>
 
       <Modal
@@ -131,7 +153,7 @@ const Name = ({ name }) => {
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
-              label="Titulo"
+              label="Title"
               name="title"
               value={formData.title}
               onChange={handleChange}
